@@ -1,0 +1,190 @@
+MalariaGuard: AI-Powered Malaria Symptom Checker & Prevention Hub
+Overview
+MalariaGuard is a comprehensive web application designed to combat malaria in Africa through early detection, prevention education, and resource connection. The platform uses AI-powered symptom analysis to assess malaria risk and provides personalized recommendations and resources.
+
+Features
+AI-Powered Symptom Checker: Analyzes user-described symptoms for malaria risk assessment
+
+Risk Visualization: Clear visual representation of malaria risk level with color-coded gauge
+
+Personalized Recommendations: Tailored advice based on individual risk assessment
+
+Symptom History Tracking: Interactive charts to track symptom patterns over time
+
+Prevention Education: Comprehensive information on malaria prevention strategies
+
+Resource Directory: Health center locations and emergency contacts
+
+Mobile Responsive Design: Works seamlessly on all device sizes
+
+Tech Stack
+Frontend
+HTML5, CSS3, JavaScript (ES6+)
+
+Chart.js for data visualization
+
+Font Awesome for icons
+
+Google Fonts (Poppins)
+
+Backend
+Python with Flask framework
+
+MySQL database
+
+RESTful API architecture
+
+CORS support
+
+AI Component
+Hugging Face Sentiment Analysis API (for future enhancement)
+
+Keyword-based symptom analysis (current implementation)
+
+Project Structure
+text
+malariaguard/
+├── index.html
+├── styles/
+│   ├── main.css
+│   └── responsive.css
+├── scripts/
+│   ├── app.js
+│   ├── symptom-checker.js
+│   └── chart.js
+├── backend/
+│   ├── app.py
+│   ├── requirements.txt
+│   └── database.sql
+└── assets/
+    ├── icons/
+    └── images/
+Installation & Setup
+Prerequisites
+Python 3.7+
+
+MySQL Server
+
+Modern web browser
+
+Backend Setup
+Navigate to the backend directory: cd backend
+
+Install Python dependencies: pip install -r requirements.txt
+
+Set up MySQL database:
+
+Log into MySQL: mysql -u root -p
+
+Run the schema: source database.sql
+
+Update database configuration in app.py if needed
+
+Start the Flask server: python app.py
+
+Frontend Setup
+Open index.html in a web browser
+
+Alternatively, serve the files using a local server:
+
+Python: python -m http.server 8000
+
+Node.js: npx http-server
+
+PHP: php -S localhost:8000
+
+Usage
+Symptom Checker:
+
+Navigate to the "Symptom Checker" section
+
+Describe your symptoms in the text area
+
+Click "Analyze Symptoms" to get your malaria risk assessment
+
+Prevention Tips:
+
+Explore the "Prevention" section for malaria prevention strategies
+
+Learn about bed nets, indoor spraying, medication, and protective clothing
+
+Resources:
+
+Access health center information in the "Resources" section
+
+Find educational materials and emergency contacts
+
+API Endpoints
+POST /api/analyze-symptoms: Submit symptoms for risk analysis
+
+GET /api/symptom-history: Retrieve symptom check history
+
+Database Schema
+The application uses three main tables:
+
+symptom_checks: Stores user symptom submissions and risk assessments
+
+prevention_tips: Contains malaria prevention information
+
+health_centers: Stores healthcare facility information
+
+Customization
+Adding New Prevention Tips
+Insert new records into the prevention_tips table:
+
+sql
+INSERT INTO prevention_tips (title, description, category) 
+VALUES ('Your Tip Title', 'Tip description here.', 'Category');
+Adding Health Centers
+Insert new records into the health_centers table:
+
+sql
+INSERT INTO health_centers (name, address, latitude, longitude, contact) 
+VALUES ('Center Name', 'Full address', lat_value, long_value, 'Contact info');
+Modifying Risk Assessment
+Edit the malariaKeywords object in symptom-checker.js to adjust risk scoring:
+
+javascript
+const malariaKeywords = {
+    high: ['fever', 'chills', 'sweating', ...],
+    medium: ['diarrhea', 'abdominal pain', ...],
+    low: ['cough', 'mild headache', ...]
+};
+Team Members (For Hackathon Submission)
+[Your Name] - Project Lead & Full-Stack Developer - [your.email@example.com]
+
+[Team Member 2] - Frontend Developer - [member2.email@example.com]
+
+[Team Member 3] - Backend Developer - [member3.email@example.com]
+
+[Team Member 4] - UI/UX Designer - [member4.email@example.com]
+
+[Team Member 5] - Data Analyst - [member5.email@example.com]
+
+Future Enhancements
+Integration with real Hugging Face API for more accurate sentiment analysis
+
+Geolocation services for finding nearby health centers
+
+Multi-language support for broader accessibility in Africa
+
+SMS integration for areas with limited internet access
+
+Predictive analytics for malaria outbreak forecasting
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+Acknowledgments
+World Health Organization for malaria prevention guidelines
+
+Hugging Face for providing accessible AI APIs
+
+Health workers across Africa for their tireless efforts against malaria
+
+Support
+For support or questions about this project, please contact:
+
+Email: info@malariaguard.org
+
+Phone: +254 710668423

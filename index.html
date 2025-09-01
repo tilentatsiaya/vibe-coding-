@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MalariaGuard - AI-Powered Malaria Prevention</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-mosquito"></i>
+                <span>MalariaGuard</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="#symptom-checker" class="nav-link">Symptom Checker</a></li>
+                <li class="nav-item"><a href="#prevention" class="nav-link">Prevention</a></li>
+                <li class="nav-item"><a href="#resources" class="nav-link">Resources</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Fight Malaria with AI Technology</h1>
+            <p>Early detection, prevention guidance, and community resources to combat malaria in Africa</p>
+            <div class="hero-buttons">
+                <a href="#symptom-checker" class="btn btn-primary">Check Symptoms</a>
+                <a href="#prevention" class="btn btn-secondary">Prevention Tips</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="assets/images/health_worker.svg" alt="Health worker with technology">
+        </div>
+    </section>
+
+    <!-- Symptom Checker Section -->
+    <section id="symptom-checker" class="symptom-checker">
+        <div class="container">
+            <h2>AI-Powered Symptom Checker</h2>
+            <p>Describe how you're feeling and our AI will assess your malaria risk</p>
+            
+            <div class="checker-container">
+                <div class="input-section">
+                    <textarea id="symptom-input" placeholder="Describe your symptoms... (e.g., fever, headache, chills)"></textarea>
+                    <button id="analyze-btn" class="btn btn-primary">Analyze Symptoms</button>
+                </div>
+                
+                <div class="results-section">
+                    <div class="risk-meter">
+                        <h3>Malaria Risk Assessment</h3>
+                        <div class="meter-gauge">
+                            <div class="gauge-fill" id="gauge-fill"></div>
+                        </div>
+                        <div class="risk-level" id="risk-level">Low Risk</div>
+                    </div>
+                    
+                    <div class="recommendations">
+                        <h3>Recommendations</h3>
+                        <div id="recommendation-text">
+                            <p>Enter your symptoms to get personalized recommendations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="symptom-history">
+                <h3>Symptom History</h3>
+                <div class="chart-container">
+                    <canvas id="symptom-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prevention Section -->
+    <section id="prevention" class="prevention">
+        <div class="container">
+            <h2>Malaria Prevention Strategies</h2>
+            <div class="prevention-cards">
+                <div class="prevention-card">
+                    <div class="card-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <h3>Use Bed Nets</h3>
+                    <p>Sleep under insecticide-treated mosquito nets (ITNs) to prevent mosquito bites.</p>
+                </div>
+                
+                <div class="prevention-card">
+                    <div class="card-icon">
+                        <i class="fas fa-spray-can"></i>
+                    </div>
+                    <h3>Indoor Spraying</h3>
+                    <p>Use indoor residual spraying (IRS) with insecticides to control mosquito populations.</p>
+                </div>
+                
+                <div class="prevention-card">
+                    <div class="card-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <h3>Preventive Medication</h3>
+                    <p>Take antimalarial drugs as preventive treatment if you're in high-risk areas.</p>
+                </div>
+                
+                <div class="prevention-card">
+                    <div class="card-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h3>Protective Clothing</h3>
+                    <p>Wear long-sleeved clothing and pants, especially during evening hours.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="resources">
+        <div class="container">
+            <h2>Resources & Help</h2>
+            <div class="resources-grid">
+                <div class="resource-item">
+                    <h3><i class="fas fa-map-marker-alt"></i> Find Health Centers</h3>
+                    <p>Locate nearby health facilities for testing and treatment.</p>
+                    <button class="btn btn-outline">View Map</button>
+                </div>
+                
+                <div class="resource-item">
+                    <h3><i class="fas fa-book"></i> Educational Materials</h3>
+                    <p>Download posters, brochures, and information sheets about malaria.</p>
+                    <button class="btn btn-outline">Download</button>
+                </div>
+                
+                <div class="resource-item">
+                    <h3><i class="fas fa-phone-alt"></i> Emergency Contacts</h3>
+                    <p>Important phone numbers for immediate assistance and information.</p>
+                    <button class="btn btn-outline">View Contacts</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MalariaGuard</h3>
+                    <p>Using technology to fight malaria in Africa through early detection and prevention.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#symptom-checker">Symptom Checker</a></li>
+                        <li><a href="#prevention">Prevention</a></li>
+                        <li><a href="#resources">Resources</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> info@malariaguard.org</p>
+                    <p><i class="fas fa-phone"></i> +254 710 668 423</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 MalariaGuard. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/symptom-checker.js"></script>
+    <script src="scripts/chart.js"></script>
+</body>
+</html>
