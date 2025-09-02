@@ -1,17 +1,18 @@
-from flask import send_from_directory
-import os
-
-
-
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import mysql.connector
 from datetime import datetime
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+# Initialize the Flask application
+# --- MODIFICATION ---
+# Tell Flask to look for the template and static files in the parent directory
+# relative to this file's location (backend/).
+app = Flask(__name__, template_folder='../', static_folder='../')
+CORS(app) # Enable Cross-Origin Resource Sharing
 
-# Database configuration (example)
+# --- Database Configuration ---
+# It's good practice to keep your database credentials secure.
+# For a real application, consider using environment variables.
 db_config = {
     'host': 'localhost',
     'user': 'malariaguard',
@@ -20,130 +21,110 @@ db_config = {
 }
 
 def get_db_connection():
-    return mysql.connector.connect(**db_config)
+    """Establishes and returns a connection to the MySQL database."""
+    try:
+        conn = mysql.connector.connect(**db_config)
+        return conn
+    except mysql.connector.Error as err:
+        print(f"Error connecting to database: {err}")
+        return None
+
+# --- HTML Rendering Route ---
+@app.route('/')
+def home():
+    """Serves the main HTML page."""
+    # This assumes you have an 'index.html' file in a 'templates' folder
+    # in the same directory as this script.
+    return render_template('index.html')
+
+# --- API Routes ---
 
 @app.route('/api/analyze-symptoms', methods=['POST'])
 def analyze_symptoms():
+    """
+    Analyzes user-submitted symptoms, provides a basic diagnosis,
+    and logs the entry into the database.
+    """
+    data = request.get_json()
+    if not data or 'symptoms' not in data:
+        return jsonify({'error': 'Missing symptoms data'}), 400
+
+    symptoms = data['symptoms']
+    
+    # --- Simple Malaria Diagnosis Logic (Placeholder) ---
+    # This is a very basic example. A real-world application would require a
+    # much more sophisticated model (e.g., machine learning).
+    malaria_keywords = ['fever', 'chills', 'headache', 'sweating', 'fatigue', 'nausea']
+    symptom_count = sum(1 for symptom in symptoms if symptom.lower() in malaria_keywords)
+    
+    if symptom_count >= 3:
+        diagnosis = "High risk of Malaria. Please consult a doctor immediately."
+    elif symptom_count >= 1:
+        diagnosis = "Moderate risk of Malaria. Monitor symptoms and consult a doctor if they worsen."
+    else:
+        diagnosis = "Low risk of Malaria. Symptoms may be related to another condition."
+
+    # --- Database Logging ---
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({'error': 'Database connection failed'}), 500
+        
+    cursor = conn.cursor()
     try:
-        data = request.json
-        symptoms = data.get('symptoms', '')
+        # --- MODIFICATION ---
+        # Changed table name from 'symptom_logs' to 'symptom_checks' to match database.sql
+        add_log_query = (
+            "INSERT INTO symptom_checks (symptoms, diagnosis, log_date) "
+            "VALUES (%s, %s, %s)"
+        )
+        # Convert list of symptoms to a comma-separated string for storage
+        symptoms_str = ','.join(symptoms)
+        log_data = (symptoms_str, diagnosis, datetime.now())
         
-        # In a real application, you would call the Hugging Face API here
-        # For this example, we'll simulate analysis
-        
-        # Simple keyword matching (same as frontend for consistency)
-        malaria_keywords = {
-            'high': ['fever', 'chills', 'sweating', 'headache', 'nausea', 'vomiting', 'body aches', 'fatigue'],
-            'medium': ['diarrhea', 'abdominal pain', 'muscle pain', 'jaundice'],
-            'low': ['cough', 'mild headache', 'tiredness']
-        }
-        
-        risk_score = 0
-        found_symptoms = []
-        
-        # Check for high risk keywords
-        for keyword in malaria_keywords['high']:
-            if keyword in symptoms.lower():
-                risk_score += 3
-                found_symptoms.append(keyword)
-        
-        # Check for medium risk keywords
-        for keyword in malaria_keywords['medium']:
-            if keyword in symptoms.lower():
-                risk_score += 2
-                found_symptoms.append(keyword)
-        
-        # Check for low risk keywords
-        for keyword in malaria_keywords['low']:
-            if keyword in symptoms.lower():
-                risk_score += 1
-                found_symptoms.append(keyword)
-        
-        # Calculate risk percentage (cap at 95%)
-        risk_percentage = min(95, (risk_score / 15) * 100)
-        
-        # Determine risk level
-        if risk_percentage < 30:
-            risk_level = "Low Risk"
-        elif risk_percentage < 70:
-            risk_level = "Medium Risk"
-        else:
-            risk_level = "High Risk"
-        
-        # Save to database
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        query = "INSERT INTO symptom_checks (symptoms, risk_score, risk_level, created_at) VALUES (%s, %s, %s, %s)"
-        values = (symptoms, risk_percentage, risk_level, datetime.now())
-        
-        cursor.execute(query, values)
+        cursor.execute(add_log_query, log_data)
         conn.commit()
-        
+    except mysql.connector.Error as err:
+        print(f"Database Error: {err}")
+        return jsonify({'error': 'Failed to save symptom log'}), 500
+    finally:
         cursor.close()
         conn.close()
-        
-        return jsonify({
-            'success': True,
-            'risk_score': risk_percentage,
-            'risk_level': risk_level,
-            'found_symptoms': found_symptoms
-        })
-        
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+
+    return jsonify({'diagnosis': diagnosis})
 
 @app.route('/api/symptom-history', methods=['GET'])
 def get_symptom_history():
+    """
+    Retrieves all symptom log entries from the database.
+    """
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({'error': 'Database connection failed'}), 500
+
+    # Using dictionary=True to get results as a list of dicts
+    cursor = conn.cursor(dictionary=True)
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        
-        query = "SELECT * FROM symptom_checks ORDER BY created_at DESC LIMIT 10"
+        # --- MODIFICATION ---
+        # Changed table name from 'symptom_logs' to 'symptom_checks' to match database.sql
+        query = "SELECT id, symptoms, diagnosis, log_date FROM symptom_checks ORDER BY log_date DESC"
         cursor.execute(query)
-        
         history = cursor.fetchall()
-        
-        # Convert datetime objects to strings for JSON serialization
-        for entry in history:
-            entry['created_at'] = entry['created_at'].isoformat()
-        
+
+        # Convert datetime objects to string format for JSON serialization
+        for item in history:
+            item['log_date'] = item['log_date'].strftime('%Y-%m-%d %H:%M:%S')
+
+        return jsonify(history)
+    except mysql.connector.Error as err:
+        print(f"Database Error: {err}")
+        return jsonify({'error': 'Failed to retrieve symptom history'}), 500
+    finally:
         cursor.close()
         conn.close()
-        
-        return jsonify({
-            'success': True,
-            'history': history
-        })
-        
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
-    
-    # Serve the main page
-@app.route('/')
-def serve_frontend():
-    return send_from_directory('../', 'index.html')
 
-# Serve static files (CSS, JS, images)
-@app.route('/<path:path>')
-def serve_static_files(path):
-    # Check if the file exists in any of the folders
-    if os.path.exists(f'../{path}'):
-        return send_from_directory('../', path)
-    elif os.path.exists(f'../styles/{path}'):
-        return send_from_directory('../styles/', path)
-    elif os.path.exists(f'../scripts/{path}'):
-        return send_from_directory('../scripts/', path)
-    elif os.path.exists(f'../assets/{path}'):
-        return send_from_directory('../assets/', path)
-    else:
-        return "Not Found", 404
+# --- Main Application Runner ---
+if __name__ == "__main__":
+    # Note: For production, use a proper WSGI server like Gunicorn or uWSGI
+    # instead of the Flask development server.
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
-if __name__ == '__main__':
-    app.run(debug=True)

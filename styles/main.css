@@ -415,6 +415,11 @@ body {
     padding-top: 2rem;
     border-top: 1px solid #34495e;
     color: #bdc3c7;
+
+
+.chart-container {
+    height: 300px;        /* Fixed height for the chart */
+    position: relative;   /* Allows Chart.js to position elements properly */
 }
 
 /* Responsive styles will be in responsive.css */

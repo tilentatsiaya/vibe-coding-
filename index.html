@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="styles/responsive.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -43,7 +46,7 @@
             </div>
         </div>
         <div class="hero-image">
-            <img src="assets/images/health_worker.svg" alt="Health worker with technology">
+            <img src="assets/images/health_workertech.webp" alt="Health worker with technology">
         </div>
     </section>
 
@@ -81,7 +84,8 @@
                 <h3>Symptom History</h3>
                 <div class="chart-container">
                     <canvas id="symptom-chart"></canvas>
-                </div>
+    <script src="scripts/symptom-checker.js"></script>
+    <script src="scripts/charts.js"></script>
             </div>
         </div>
     </section>

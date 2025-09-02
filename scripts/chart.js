@@ -5,8 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const symptomInput = document.getElementById('symptom-input');
     const gaugeFill = document.getElementById('gauge-fill');
     const riskLevel = document.getElementById('risk-level');
+    const ctx = document.getElementById('symptom-chart').getContext('2d');
     const recommendationText = document.getElementById('recommendation-text');
-    
+
     // Malaria keywords and their risk scores
     const malariaKeywords = {
         high: ['fever', 'chills', 'sweating', 'headache', 'nausea', 'vomiting', 'body aches', 'fatigue'],
@@ -95,6 +96,31 @@ document.addEventListener('DOMContentLoaded', function() {
         
         riskLevel.textContent = level;
         riskLevel.style.color = color;
+
+        const symptomChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4'],
+        datasets: [{
+            label: 'Symptom Severity',
+            data: [3, 2, 4, 5],
+            borderColor: '#2c7da0',
+            backgroundColor: 'rgba(44, 125, 160, 0.2)',
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom'
+            }
+        }
+    }
+});
+
         
         // Update recommendations
         let recommendations = '';
@@ -151,4 +177,40 @@ document.addEventListener('DOMContentLoaded', function() {
         // Save back to localStorage
         localStorage.setItem('malariaSymptomHistory', JSON.stringify(history));
     }
+});
+
+// scripts/charts.js
+
+
+    // Load history from localStorage
+    let history = JSON.parse(localStorage.getItem('malariaSymptomHistory')) || [];
+
+    const labels = history.map(entry => new Date(entry.date).toLocaleDateString());
+    const data = history.map(entry => entry.riskScore);
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Risk Score (%)',
+                data: data,
+                fill: false,
+                borderColor: 'blue',
+                tension: 0.2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { min: 0, max: 100 }
+            }
+        }
+    });
+}
+// Expose globally so symptom-checker.js can call it
+  window.updateSymptomChart = updateSymptomChart;
+
+  // Draw initial chart
+  updateSymptomChart();
 });
